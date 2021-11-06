@@ -1,0 +1,102 @@
+type Book {
+  title: String
+  author: String
+}
+
+type Company {
+  id: Int
+  companyName: String
+  stores: [Store]
+}
+
+type Store {
+  id: Int
+  storeCode: String
+  storeName: String
+  companyId: Int
+  company: Company
+}
+
+type Room {
+  id: ID!
+  name: String
+  messages: [Message]
+}
+
+type Message {
+  id: ID!
+  body: String
+  chatUser: ChatUser
+  room: Room
+}
+
+type ChatUser {
+  id: ID!
+  name: String
+  messages: [Message]
+}
+
+type Query {
+  books: [Book!]!
+  # getRooms(id: ID): [Room]
+  # getChatUser(id: ID!): ChatUser
+  # listChatUsers: [ChatUser]
+  # getMessages(id: ID): [Message]
+
+  getCompanyById(id: Int!): Company
+  listCompanys: [Company]
+  getStoreByStoreCode(storeCode: String!): Store
+  listStores: [Store]
+  listStoresByCompanyId(companyId: Int!): [Store]
+
+  launches: [Launch]!
+  launch(id: ID!): Launch
+  # Queries for the current user
+  # me: User
+}
+
+type Launch {
+  id: ID!
+  site: String
+  mission: Mission
+  rocket: Rocket
+  isBooked: Boolean!
+}
+
+type Rocket {
+  id: ID!
+  name: String
+  type: String
+}
+
+# type User {
+#   id: ID!
+#   email: String!
+#   trips: [Launch]!
+# }
+
+type Mission {
+  name: String
+  missionPatch(size: PatchSize): String
+}
+
+enum PatchSize {
+  SMALL
+  LARGE
+}
+
+type Mutation {
+  # if false, booking trips failed -- check errors
+  bookTrips(launchIds: [ID]!): TripUpdateResponse!
+
+  # if false, cancellation failed -- check errors
+  cancelTrip(launchId: ID!): TripUpdateResponse!
+
+  login(email: String): String # login token
+}
+
+type TripUpdateResponse {
+  success: Boolean!
+  message: String
+  launches: [Launch]
+}
