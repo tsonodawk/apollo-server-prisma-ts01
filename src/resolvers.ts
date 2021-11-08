@@ -4,17 +4,15 @@ import { rooms } from './data/rooms'
 import { messages } from './data/messages'
 import { companys } from './data/companys'
 import { stores } from './data/stores'
-import {
-  ChatUser,
-  Company,
-  Store,
-  Message,
-  Resolvers,
-  Room,
-} from './types/generated/graphql'
+import { Resolvers } from './types/generated/graphql'
 import { storeResolver } from './resolvers/storeResolver'
 import { companyResolver } from './resolvers/companyResolver'
 import { queryResolver } from './resolvers/queryResolver'
+import { mutationResolver } from './resolvers/mutationResolver'
+
+import { PrismaClient } from '@prisma/client'
+
+const prisma = new PrismaClient()
 
 export const resolvers: Resolvers = {
   Query: queryResolver,
@@ -50,6 +48,7 @@ export const resolvers: Resolvers = {
   //     return listStore
   //   },
   // },
+  Mutation: mutationResolver,
   Store: storeResolver,
   // Store: {
   //   company: (parent, args, context) => {

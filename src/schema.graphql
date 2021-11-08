@@ -17,6 +17,25 @@ type Store {
   company: Company
 }
 
+scalar DateTime
+
+type Department {
+  departmentCode: String!
+  departmentName: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  employee: [Employee]
+}
+
+type Employee {
+  employeeCode: String
+  employeeName: String
+  departmentCode: String
+  department: Department
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
 type Room {
   id: ID!
   name: String
@@ -49,10 +68,17 @@ type Query {
   listStores: [Store]
   listStoresByCompanyId(companyId: Int!): [Store]
 
+  listDepartment: [Department]
+  listEmployee: [Employee]
+
   launches: [Launch]!
   launch(id: ID!): Launch
   # Queries for the current user
   # me: User
+}
+
+type Mutation {
+  addDepartment(departmentCode: String!, departmentName: String!): Department
 }
 
 type Launch {

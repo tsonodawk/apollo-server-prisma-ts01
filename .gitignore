@@ -188,3 +188,4 @@ $RECYCLE.BIN/
 /vendor
 !public/**/dist
 !public/**/logs
+mysql/bk_db/

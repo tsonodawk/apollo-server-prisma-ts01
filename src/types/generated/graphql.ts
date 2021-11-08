@@ -1,4 +1,5 @@
-import { GraphQLResolveInfo } from 'graphql';
+import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
+import { Context } from '../context';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
@@ -11,6 +12,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  DateTime: any;
 };
 
 export type Book = {
@@ -31,6 +33,25 @@ export type Company = {
   companyName?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['Int']>;
   stores?: Maybe<Array<Maybe<Store>>>;
+};
+
+export type Department = {
+  __typename?: 'Department';
+  createdAt?: Maybe<Scalars['DateTime']>;
+  departmentCode: Scalars['String'];
+  departmentName?: Maybe<Scalars['String']>;
+  employee?: Maybe<Array<Maybe<Employee>>>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+};
+
+export type Employee = {
+  __typename?: 'Employee';
+  createdAt?: Maybe<Scalars['DateTime']>;
+  department?: Maybe<Department>;
+  departmentCode?: Maybe<Scalars['String']>;
+  employeeCode?: Maybe<Scalars['String']>;
+  employeeName?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
 export type Launch = {
@@ -63,9 +84,16 @@ export type MissionMissionPatchArgs = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addDepartment?: Maybe<Department>;
   bookTrips: TripUpdateResponse;
   cancelTrip: TripUpdateResponse;
   login?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationAddDepartmentArgs = {
+  departmentCode: Scalars['String'];
+  departmentName: Scalars['String'];
 };
 
 
@@ -96,6 +124,8 @@ export type Query = {
   launch?: Maybe<Launch>;
   launches: Array<Maybe<Launch>>;
   listCompanys?: Maybe<Array<Maybe<Company>>>;
+  listDepartment?: Maybe<Array<Maybe<Department>>>;
+  listEmployee?: Maybe<Array<Maybe<Employee>>>;
   listStores?: Maybe<Array<Maybe<Store>>>;
   listStoresByCompanyId?: Maybe<Array<Maybe<Store>>>;
 };
@@ -224,6 +254,9 @@ export type ResolversTypes = ResolversObject<{
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   ChatUser: ResolverTypeWrapper<ChatUser>;
   Company: ResolverTypeWrapper<Company>;
+  DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
+  Department: ResolverTypeWrapper<Department>;
+  Employee: ResolverTypeWrapper<Employee>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Launch: ResolverTypeWrapper<Launch>;
@@ -245,6 +278,9 @@ export type ResolversParentTypes = ResolversObject<{
   Boolean: Scalars['Boolean'];
   ChatUser: ChatUser;
   Company: Company;
+  DateTime: Scalars['DateTime'];
+  Department: Department;
+  Employee: Employee;
   ID: Scalars['ID'];
   Int: Scalars['Int'];
   Launch: Launch;
@@ -259,27 +295,50 @@ export type ResolversParentTypes = ResolversObject<{
   TripUpdateResponse: TripUpdateResponse;
 }>;
 
-export type BookResolvers<ContextType = any, ParentType extends ResolversParentTypes['Book'] = ResolversParentTypes['Book']> = ResolversObject<{
+export type BookResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Book'] = ResolversParentTypes['Book']> = ResolversObject<{
   author?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type ChatUserResolvers<ContextType = any, ParentType extends ResolversParentTypes['ChatUser'] = ResolversParentTypes['ChatUser']> = ResolversObject<{
+export type ChatUserResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ChatUser'] = ResolversParentTypes['ChatUser']> = ResolversObject<{
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   messages?: Resolver<Maybe<Array<Maybe<ResolversTypes['Message']>>>, ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type CompanyResolvers<ContextType = any, ParentType extends ResolversParentTypes['Company'] = ResolversParentTypes['Company']> = ResolversObject<{
+export type CompanyResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Company'] = ResolversParentTypes['Company']> = ResolversObject<{
   companyName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   stores?: Resolver<Maybe<Array<Maybe<ResolversTypes['Store']>>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type LaunchResolvers<ContextType = any, ParentType extends ResolversParentTypes['Launch'] = ResolversParentTypes['Launch']> = ResolversObject<{
+export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
+  name: 'DateTime';
+}
+
+export type DepartmentResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Department'] = ResolversParentTypes['Department']> = ResolversObject<{
+  createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  departmentCode?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  departmentName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  employee?: Resolver<Maybe<Array<Maybe<ResolversTypes['Employee']>>>, ParentType, ContextType>;
+  updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type EmployeeResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Employee'] = ResolversParentTypes['Employee']> = ResolversObject<{
+  createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  department?: Resolver<Maybe<ResolversTypes['Department']>, ParentType, ContextType>;
+  departmentCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  employeeCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  employeeName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type LaunchResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Launch'] = ResolversParentTypes['Launch']> = ResolversObject<{
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   isBooked?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   mission?: Resolver<Maybe<ResolversTypes['Mission']>, ParentType, ContextType>;
@@ -288,7 +347,7 @@ export type LaunchResolvers<ContextType = any, ParentType extends ResolversParen
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type MessageResolvers<ContextType = any, ParentType extends ResolversParentTypes['Message'] = ResolversParentTypes['Message']> = ResolversObject<{
+export type MessageResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Message'] = ResolversParentTypes['Message']> = ResolversObject<{
   body?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   chatUser?: Resolver<Maybe<ResolversTypes['ChatUser']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
@@ -296,44 +355,47 @@ export type MessageResolvers<ContextType = any, ParentType extends ResolversPare
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type MissionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mission'] = ResolversParentTypes['Mission']> = ResolversObject<{
+export type MissionResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Mission'] = ResolversParentTypes['Mission']> = ResolversObject<{
   missionPatch?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MissionMissionPatchArgs, never>>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
+export type MutationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
+  addDepartment?: Resolver<Maybe<ResolversTypes['Department']>, ParentType, ContextType, RequireFields<MutationAddDepartmentArgs, 'departmentCode' | 'departmentName'>>;
   bookTrips?: Resolver<ResolversTypes['TripUpdateResponse'], ParentType, ContextType, RequireFields<MutationBookTripsArgs, 'launchIds'>>;
   cancelTrip?: Resolver<ResolversTypes['TripUpdateResponse'], ParentType, ContextType, RequireFields<MutationCancelTripArgs, 'launchId'>>;
   login?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MutationLoginArgs, never>>;
 }>;
 
-export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
+export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   books?: Resolver<Array<ResolversTypes['Book']>, ParentType, ContextType>;
   getCompanyById?: Resolver<Maybe<ResolversTypes['Company']>, ParentType, ContextType, RequireFields<QueryGetCompanyByIdArgs, 'id'>>;
   getStoreByStoreCode?: Resolver<Maybe<ResolversTypes['Store']>, ParentType, ContextType, RequireFields<QueryGetStoreByStoreCodeArgs, 'storeCode'>>;
   launch?: Resolver<Maybe<ResolversTypes['Launch']>, ParentType, ContextType, RequireFields<QueryLaunchArgs, 'id'>>;
   launches?: Resolver<Array<Maybe<ResolversTypes['Launch']>>, ParentType, ContextType>;
   listCompanys?: Resolver<Maybe<Array<Maybe<ResolversTypes['Company']>>>, ParentType, ContextType>;
+  listDepartment?: Resolver<Maybe<Array<Maybe<ResolversTypes['Department']>>>, ParentType, ContextType>;
+  listEmployee?: Resolver<Maybe<Array<Maybe<ResolversTypes['Employee']>>>, ParentType, ContextType>;
   listStores?: Resolver<Maybe<Array<Maybe<ResolversTypes['Store']>>>, ParentType, ContextType>;
   listStoresByCompanyId?: Resolver<Maybe<Array<Maybe<ResolversTypes['Store']>>>, ParentType, ContextType, RequireFields<QueryListStoresByCompanyIdArgs, 'companyId'>>;
 }>;
 
-export type RocketResolvers<ContextType = any, ParentType extends ResolversParentTypes['Rocket'] = ResolversParentTypes['Rocket']> = ResolversObject<{
+export type RocketResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Rocket'] = ResolversParentTypes['Rocket']> = ResolversObject<{
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type RoomResolvers<ContextType = any, ParentType extends ResolversParentTypes['Room'] = ResolversParentTypes['Room']> = ResolversObject<{
+export type RoomResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Room'] = ResolversParentTypes['Room']> = ResolversObject<{
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   messages?: Resolver<Maybe<Array<Maybe<ResolversTypes['Message']>>>, ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type StoreResolvers<ContextType = any, ParentType extends ResolversParentTypes['Store'] = ResolversParentTypes['Store']> = ResolversObject<{
+export type StoreResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Store'] = ResolversParentTypes['Store']> = ResolversObject<{
   company?: Resolver<Maybe<ResolversTypes['Company']>, ParentType, ContextType>;
   companyId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
@@ -342,17 +404,20 @@ export type StoreResolvers<ContextType = any, ParentType extends ResolversParent
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type TripUpdateResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['TripUpdateResponse'] = ResolversParentTypes['TripUpdateResponse']> = ResolversObject<{
+export type TripUpdateResponseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['TripUpdateResponse'] = ResolversParentTypes['TripUpdateResponse']> = ResolversObject<{
   launches?: Resolver<Maybe<Array<Maybe<ResolversTypes['Launch']>>>, ParentType, ContextType>;
   message?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type Resolvers<ContextType = any> = ResolversObject<{
+export type Resolvers<ContextType = Context> = ResolversObject<{
   Book?: BookResolvers<ContextType>;
   ChatUser?: ChatUserResolvers<ContextType>;
   Company?: CompanyResolvers<ContextType>;
+  DateTime?: GraphQLScalarType;
+  Department?: DepartmentResolvers<ContextType>;
+  Employee?: EmployeeResolvers<ContextType>;
   Launch?: LaunchResolvers<ContextType>;
   Message?: MessageResolvers<ContextType>;
   Mission?: MissionResolvers<ContextType>;
