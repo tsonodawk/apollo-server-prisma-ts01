@@ -40,15 +40,15 @@ export type Department = {
   createdAt?: Maybe<Scalars['DateTime']>;
   departmentCode: Scalars['String'];
   departmentName?: Maybe<Scalars['String']>;
-  employee?: Maybe<Array<Maybe<Employee>>>;
+  employees?: Maybe<Array<Maybe<Employee>>>;
   updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
 export type Employee = {
   __typename?: 'Employee';
   createdAt?: Maybe<Scalars['DateTime']>;
-  department?: Maybe<Department>;
   departmentCode?: Maybe<Scalars['String']>;
+  departments?: Maybe<Array<Maybe<Department>>>;
   employeeCode?: Maybe<Scalars['String']>;
   employeeName?: Maybe<Scalars['String']>;
   updatedAt?: Maybe<Scalars['DateTime']>;
@@ -87,7 +87,10 @@ export type Mutation = {
   addDepartment?: Maybe<Department>;
   bookTrips: TripUpdateResponse;
   cancelTrip: TripUpdateResponse;
+  creatEmployee?: Maybe<Employee>;
+  deleteEmployee?: Maybe<Employee>;
   login?: Maybe<Scalars['String']>;
+  updateEmployee?: Maybe<Employee>;
 };
 
 
@@ -107,8 +110,26 @@ export type MutationCancelTripArgs = {
 };
 
 
+export type MutationCreatEmployeeArgs = {
+  deptcodes?: Maybe<Array<Maybe<Scalars['String']>>>;
+  employeeCode: Scalars['String'];
+  employeeName?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationDeleteEmployeeArgs = {
+  employeeCode: Scalars['String'];
+};
+
+
 export type MutationLoginArgs = {
   email?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationUpdateEmployeeArgs = {
+  deptcodes: Array<Scalars['String']>;
+  employeeCode: Scalars['String'];
 };
 
 export enum PatchSize {
@@ -323,15 +344,15 @@ export type DepartmentResolvers<ContextType = Context, ParentType extends Resolv
   createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   departmentCode?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   departmentName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  employee?: Resolver<Maybe<Array<Maybe<ResolversTypes['Employee']>>>, ParentType, ContextType>;
+  employees?: Resolver<Maybe<Array<Maybe<ResolversTypes['Employee']>>>, ParentType, ContextType>;
   updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type EmployeeResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Employee'] = ResolversParentTypes['Employee']> = ResolversObject<{
   createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
-  department?: Resolver<Maybe<ResolversTypes['Department']>, ParentType, ContextType>;
   departmentCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  departments?: Resolver<Maybe<Array<Maybe<ResolversTypes['Department']>>>, ParentType, ContextType>;
   employeeCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   employeeName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
@@ -365,7 +386,10 @@ export type MutationResolvers<ContextType = Context, ParentType extends Resolver
   addDepartment?: Resolver<Maybe<ResolversTypes['Department']>, ParentType, ContextType, RequireFields<MutationAddDepartmentArgs, 'departmentCode' | 'departmentName'>>;
   bookTrips?: Resolver<ResolversTypes['TripUpdateResponse'], ParentType, ContextType, RequireFields<MutationBookTripsArgs, 'launchIds'>>;
   cancelTrip?: Resolver<ResolversTypes['TripUpdateResponse'], ParentType, ContextType, RequireFields<MutationCancelTripArgs, 'launchId'>>;
+  creatEmployee?: Resolver<Maybe<ResolversTypes['Employee']>, ParentType, ContextType, RequireFields<MutationCreatEmployeeArgs, 'employeeCode'>>;
+  deleteEmployee?: Resolver<Maybe<ResolversTypes['Employee']>, ParentType, ContextType, RequireFields<MutationDeleteEmployeeArgs, 'employeeCode'>>;
   login?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MutationLoginArgs, never>>;
+  updateEmployee?: Resolver<Maybe<ResolversTypes['Employee']>, ParentType, ContextType, RequireFields<MutationUpdateEmployeeArgs, 'deptcodes' | 'employeeCode'>>;
 }>;
 
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{

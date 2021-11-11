@@ -37,20 +37,17 @@ model User {
 }
 
 model Department {
-  departmentCode String     @unique
-  departmentName String
+  departmentCode String     @id
+  departmentName String?
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
-  employee       Employee[]
-
-  @@id([departmentCode])
+  employees      Employee[]
 }
 
 model Employee {
-  employeeCode   String     @id
-  employeeName   String
-  departmentCode String
-  department     Department @relation(fields: [departmentCode], references: [departmentCode])
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @updatedAt
+  employeeCode String       @id
+  employeeName String?
+  departments  Department[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
 }

@@ -46,7 +46,7 @@ export const queryResolver = {
 
     return await prisma.department.findMany({
       include: {
-        employee: true,
+        employees: true,
       },
     })
     // return (await prisma.department.findMany()).map((item) =>
@@ -62,7 +62,7 @@ export const queryResolver = {
       //   }
       // },
       include: {
-        department: true,
+        departments: true,
       },
     })
 

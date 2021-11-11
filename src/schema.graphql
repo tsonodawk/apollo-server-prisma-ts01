@@ -24,14 +24,14 @@ type Department {
   departmentName: String
   createdAt: DateTime
   updatedAt: DateTime
-  employee: [Employee]
+  employees: [Employee]
 }
 
 type Employee {
   employeeCode: String
   employeeName: String
   departmentCode: String
-  department: Department
+  departments: [Department]
   createdAt: DateTime
   updatedAt: DateTime
 }
@@ -79,6 +79,13 @@ type Query {
 
 type Mutation {
   addDepartment(departmentCode: String!, departmentName: String!): Department
+  creatEmployee(
+    employeeCode: String!
+    employeeName: String
+    deptcodes: [String]
+  ): Employee
+  updateEmployee(employeeCode: String!, deptcodes: [String!]!): Employee
+  deleteEmployee(employeeCode: String!): Employee
 }
 
 type Launch {
