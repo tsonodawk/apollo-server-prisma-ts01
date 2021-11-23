@@ -15,12 +15,6 @@ export type Scalars = {
   DateTime: any;
 };
 
-export type Book = {
-  __typename?: 'Book';
-  author?: Maybe<Scalars['String']>;
-  title?: Maybe<Scalars['String']>;
-};
-
 export type ChatUser = {
   __typename?: 'ChatUser';
   id: Scalars['ID'];
@@ -54,6 +48,16 @@ export type Employee = {
   updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
+export type HubspotContact = {
+  __typename?: 'HubspotContact';
+  email?: Maybe<Scalars['String']>;
+  firstname?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['String']>;
+  lastname?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
+  userType?: Maybe<Scalars['String']>;
+};
+
 export type Launch = {
   __typename?: 'Launch';
   id: Scalars['ID'];
@@ -85,28 +89,17 @@ export type MissionMissionPatchArgs = {
 export type Mutation = {
   __typename?: 'Mutation';
   addDepartment?: Maybe<Department>;
-  bookTrips: TripUpdateResponse;
-  cancelTrip: TripUpdateResponse;
   creatEmployee?: Maybe<Employee>;
   deleteEmployee?: Maybe<Employee>;
   login?: Maybe<Scalars['String']>;
   updateEmployee?: Maybe<Employee>;
+  updateHubspotContact?: Maybe<HubspotContact>;
 };
 
 
 export type MutationAddDepartmentArgs = {
   departmentCode: Scalars['String'];
   departmentName: Scalars['String'];
-};
-
-
-export type MutationBookTripsArgs = {
-  launchIds: Array<Maybe<Scalars['ID']>>;
-};
-
-
-export type MutationCancelTripArgs = {
-  launchId: Scalars['ID'];
 };
 
 
@@ -132,6 +125,12 @@ export type MutationUpdateEmployeeArgs = {
   employeeCode: Scalars['String'];
 };
 
+
+export type MutationUpdateHubspotContactArgs = {
+  contactId: Scalars['String'];
+  phone: Scalars['String'];
+};
+
 export enum PatchSize {
   Large = 'LARGE',
   Small = 'SMALL'
@@ -139,8 +138,9 @@ export enum PatchSize {
 
 export type Query = {
   __typename?: 'Query';
-  books: Array<Book>;
   getCompanyById?: Maybe<Company>;
+  getHubspotAllContacts?: Maybe<Array<Maybe<HubspotContact>>>;
+  getHubspotContactByEmail?: Maybe<HubspotContact>;
   getStoreByStoreCode?: Maybe<Store>;
   launch?: Maybe<Launch>;
   launches: Array<Maybe<Launch>>;
@@ -154,6 +154,11 @@ export type Query = {
 
 export type QueryGetCompanyByIdArgs = {
   id: Scalars['Int'];
+};
+
+
+export type QueryGetHubspotContactByEmailArgs = {
+  email: Scalars['String'];
 };
 
 
@@ -271,13 +276,13 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
-  Book: ResolverTypeWrapper<Book>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   ChatUser: ResolverTypeWrapper<ChatUser>;
   Company: ResolverTypeWrapper<Company>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
   Department: ResolverTypeWrapper<Department>;
   Employee: ResolverTypeWrapper<Employee>;
+  HubspotContact: ResolverTypeWrapper<HubspotContact>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Launch: ResolverTypeWrapper<Launch>;
@@ -295,13 +300,13 @@ export type ResolversTypes = ResolversObject<{
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
-  Book: Book;
   Boolean: Scalars['Boolean'];
   ChatUser: ChatUser;
   Company: Company;
   DateTime: Scalars['DateTime'];
   Department: Department;
   Employee: Employee;
+  HubspotContact: HubspotContact;
   ID: Scalars['ID'];
   Int: Scalars['Int'];
   Launch: Launch;
@@ -314,12 +319,6 @@ export type ResolversParentTypes = ResolversObject<{
   Store: Store;
   String: Scalars['String'];
   TripUpdateResponse: TripUpdateResponse;
-}>;
-
-export type BookResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Book'] = ResolversParentTypes['Book']> = ResolversObject<{
-  author?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type ChatUserResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ChatUser'] = ResolversParentTypes['ChatUser']> = ResolversObject<{
@@ -359,6 +358,16 @@ export type EmployeeResolvers<ContextType = Context, ParentType extends Resolver
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type HubspotContactResolvers<ContextType = Context, ParentType extends ResolversParentTypes['HubspotContact'] = ResolversParentTypes['HubspotContact']> = ResolversObject<{
+  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  firstname?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  lastname?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  phone?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  userType?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type LaunchResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Launch'] = ResolversParentTypes['Launch']> = ResolversObject<{
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   isBooked?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
@@ -384,17 +393,17 @@ export type MissionResolvers<ContextType = Context, ParentType extends Resolvers
 
 export type MutationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
   addDepartment?: Resolver<Maybe<ResolversTypes['Department']>, ParentType, ContextType, RequireFields<MutationAddDepartmentArgs, 'departmentCode' | 'departmentName'>>;
-  bookTrips?: Resolver<ResolversTypes['TripUpdateResponse'], ParentType, ContextType, RequireFields<MutationBookTripsArgs, 'launchIds'>>;
-  cancelTrip?: Resolver<ResolversTypes['TripUpdateResponse'], ParentType, ContextType, RequireFields<MutationCancelTripArgs, 'launchId'>>;
   creatEmployee?: Resolver<Maybe<ResolversTypes['Employee']>, ParentType, ContextType, RequireFields<MutationCreatEmployeeArgs, 'employeeCode'>>;
   deleteEmployee?: Resolver<Maybe<ResolversTypes['Employee']>, ParentType, ContextType, RequireFields<MutationDeleteEmployeeArgs, 'employeeCode'>>;
   login?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MutationLoginArgs, never>>;
   updateEmployee?: Resolver<Maybe<ResolversTypes['Employee']>, ParentType, ContextType, RequireFields<MutationUpdateEmployeeArgs, 'deptcodes' | 'employeeCode'>>;
+  updateHubspotContact?: Resolver<Maybe<ResolversTypes['HubspotContact']>, ParentType, ContextType, RequireFields<MutationUpdateHubspotContactArgs, 'contactId' | 'phone'>>;
 }>;
 
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
-  books?: Resolver<Array<ResolversTypes['Book']>, ParentType, ContextType>;
   getCompanyById?: Resolver<Maybe<ResolversTypes['Company']>, ParentType, ContextType, RequireFields<QueryGetCompanyByIdArgs, 'id'>>;
+  getHubspotAllContacts?: Resolver<Maybe<Array<Maybe<ResolversTypes['HubspotContact']>>>, ParentType, ContextType>;
+  getHubspotContactByEmail?: Resolver<Maybe<ResolversTypes['HubspotContact']>, ParentType, ContextType, RequireFields<QueryGetHubspotContactByEmailArgs, 'email'>>;
   getStoreByStoreCode?: Resolver<Maybe<ResolversTypes['Store']>, ParentType, ContextType, RequireFields<QueryGetStoreByStoreCodeArgs, 'storeCode'>>;
   launch?: Resolver<Maybe<ResolversTypes['Launch']>, ParentType, ContextType, RequireFields<QueryLaunchArgs, 'id'>>;
   launches?: Resolver<Array<Maybe<ResolversTypes['Launch']>>, ParentType, ContextType>;
@@ -436,12 +445,12 @@ export type TripUpdateResponseResolvers<ContextType = Context, ParentType extend
 }>;
 
 export type Resolvers<ContextType = Context> = ResolversObject<{
-  Book?: BookResolvers<ContextType>;
   ChatUser?: ChatUserResolvers<ContextType>;
   Company?: CompanyResolvers<ContextType>;
   DateTime?: GraphQLScalarType;
   Department?: DepartmentResolvers<ContextType>;
   Employee?: EmployeeResolvers<ContextType>;
+  HubspotContact?: HubspotContactResolvers<ContextType>;
   Launch?: LaunchResolvers<ContextType>;
   Message?: MessageResolvers<ContextType>;
   Mission?: MissionResolvers<ContextType>;
