@@ -1,8 +1,3 @@
-type Book {
-  title: String
-  author: String
-}
-
 type Company {
   id: Int
   companyName: String
@@ -55,39 +50,6 @@ type ChatUser {
   messages: [Message]
 }
 
-type Query {
-  books: [Book!]!
-  # getRooms(id: ID): [Room]
-  # getChatUser(id: ID!): ChatUser
-  # listChatUsers: [ChatUser]
-  # getMessages(id: ID): [Message]
-
-  getCompanyById(id: Int!): Company
-  listCompanys: [Company]
-  getStoreByStoreCode(storeCode: String!): Store
-  listStores: [Store]
-  listStoresByCompanyId(companyId: Int!): [Store]
-
-  listDepartment: [Department]
-  listEmployee: [Employee]
-
-  launches: [Launch]!
-  launch(id: ID!): Launch
-  # Queries for the current user
-  # me: User
-}
-
-type Mutation {
-  addDepartment(departmentCode: String!, departmentName: String!): Department
-  creatEmployee(
-    employeeCode: String!
-    employeeName: String
-    deptcodes: [String]
-  ): Employee
-  updateEmployee(employeeCode: String!, deptcodes: [String!]!): Employee
-  deleteEmployee(employeeCode: String!): Employee
-}
-
 type Launch {
   id: ID!
   site: String
@@ -102,12 +64,6 @@ type Rocket {
   type: String
 }
 
-# type User {
-#   id: ID!
-#   email: String!
-#   trips: [Launch]!
-# }
-
 type Mission {
   name: String
   missionPatch(size: PatchSize): String
@@ -118,18 +74,66 @@ enum PatchSize {
   LARGE
 }
 
-type Mutation {
-  # if false, booking trips failed -- check errors
-  bookTrips(launchIds: [ID]!): TripUpdateResponse!
-
-  # if false, cancellation failed -- check errors
-  cancelTrip(launchId: ID!): TripUpdateResponse!
-
-  login(email: String): String # login token
-}
-
 type TripUpdateResponse {
   success: Boolean!
   message: String
   launches: [Launch]
 }
+
+type HubspotContact {
+  id: String
+  email: String
+  firstname: String
+  lastname: String
+  userType: String
+  phone: String
+}
+
+type Query {
+  # getRooms(id: ID): [Room]
+  # getChatUser(id: ID!): ChatUser
+  # listChatUsers: [ChatUser]
+  # getMessages(id: ID): [Message]
+
+  getCompanyById(id: Int!): Company
+  listCompanys: [Company]
+  getStoreByStoreCode(storeCode: String!): Store
+  listStores: [Store]
+  listStoresByCompanyId(companyId: Int!): [Store]
+
+  listDepartment: [Department]
+  listEmployee: [Employee]
+
+  getHubspotAllContacts: [HubspotContact]
+  getHubspotContactByEmail(email: String!): HubspotContact
+
+  launches: [Launch]!
+  launch(id: ID!): Launch
+}
+
+type Mutation {
+  addDepartment(departmentCode: String!, departmentName: String!): Department
+  creatEmployee(
+    employeeCode: String!
+    employeeName: String
+    deptcodes: [String]
+  ): Employee
+  updateEmployee(employeeCode: String!, deptcodes: [String!]!): Employee
+  deleteEmployee(employeeCode: String!): Employee
+
+  updateHubspotContact(contactId: String!, phone: String!): HubspotContact
+
+  # if false, booking trips failed -- check errors
+  # bookTrips(launchIds: [ID]!): TripUpdateResponse!
+
+  # if false, cancellation failed -- check errors
+  # cancelTrip(launchId: ID!): TripUpdateResponse!
+
+  login(email: String): String # login token
+}
+
+# type User {
+#   id: ID!
+#   email: String!
+#   trips: [Launch]!
+# }

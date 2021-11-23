@@ -8,8 +8,6 @@ const prisma = new PrismaClient()
 // console.log('IN QUERY')
 
 export const queryResolver = {
-  books: () => books,
-
   getCompanyById: async (_parent: any, args: { id: number }, _context: any) => {
     const company = await companys.find((item) => item.id === args.id)
     return company as Company
@@ -67,5 +65,30 @@ export const queryResolver = {
     })
 
     return employee
+  },
+  launches: async (_parent: any, _args: any, context: any) => {
+    const allLaunches = await context.dataSources.launchAPI.getAllLaunches()
+    return allLaunches
+  },
+  launch: async (_parent: any, args: { id: string }, context: any) => {
+    const lanchById = await context.dataSources.launchAPI.getLaunchById({
+      launchId: args.id,
+    })
+    return lanchById
+  },
+
+  getHubspotAllContacts: async (_parent: any, _args: any, context: any) => {
+    const listContact =
+      await context.dataSources.hubspotAPI.getHubspotAllContacts()
+    return listContact
+  },
+  getHubspotContactByEmail: async (
+    _parent: any,
+    args: { email: string },
+    context: any
+  ) => {
+    const contact =
+      await context.dataSources.hubspotAPI.getHubspotContactByEmail(args.email)
+    return contact
   },
 }

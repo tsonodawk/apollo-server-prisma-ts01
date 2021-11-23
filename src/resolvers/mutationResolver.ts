@@ -85,4 +85,19 @@ export const mutationResolver = {
     })
     return deleteEmp
   },
+
+  updateHubspotContact: async (
+    _parent: any,
+    args: {
+      contactId: string
+      phone: string
+    },
+    context: any
+  ) => {
+    const contact = await context.dataSources.hubspotAPI.updateHubspotContact(
+      args.contactId,
+      args.phone
+    )
+    return contact
+  },
 }

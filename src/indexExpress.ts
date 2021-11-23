@@ -9,6 +9,11 @@ import { join } from 'path'
 import { resolvers } from './resolvers'
 import { GraphQLSchema } from 'graphql'
 import { Context } from './types/context'
+import { Hash } from 'crypto'
+
+// import { HubspotAPI } from 'datasources/hubspotAPI'
+const LaunchAPI = require('./datasources/launch')
+const HubspotAPI = require('./datasources/hubspot')
 
 // スキーマの定義
 const schema = loadSchemaSync(join(__dirname, './schema.graphql'), {
@@ -34,13 +39,18 @@ const getUser = (token?: string): Context['user'] => {
   }
 }
 
-async function startApolloServer(schemaWithResolvers: GraphQLSchema) {
+// async function startApolloServer(schemaWithResolvers: GraphQLSchema) {
+const startApolloServer = async (schemaWithResolvers: GraphQLSchema) => {
   const app = express()
   const httpServer = http.createServer(app)
   // const server = new ApolloServer({ schema, resolvers })
   // console.log('IN SERVER')
   const server = new ApolloServer({
     schema: schemaWithResolvers,
+    dataSources: () => ({
+      launchAPI: new LaunchAPI(),
+      hubspotAPI: new HubspotAPI(),
+    }),
     context: ({ req }) =>
       ({
         user: getUser(req.headers.authorization),
