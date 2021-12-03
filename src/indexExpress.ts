@@ -48,6 +48,7 @@ const startApolloServer = async (schemaWithResolvers: GraphQLSchema) => {
   const server = new ApolloServer({
     schema: schemaWithResolvers,
     dataSources: () => ({
+      // prismaもDataSource化して読み込み必要ありそう
       launchAPI: new LaunchAPI(),
       hubspotAPI: new HubspotAPI(),
     }),
